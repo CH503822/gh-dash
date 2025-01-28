@@ -143,6 +143,15 @@ type Pager struct {
 
 type HexColor string
 
+type ColorThemeIcon struct {
+	NewContributor HexColor `yaml:"newcontributor"   validate:"omitempty,hexcolor"`
+	Contributor    HexColor `yaml:"contributor"      validate:"omitempty,hexcolor"`
+	Collaborator   HexColor `yaml:"collaborator"     validate:"omitempty,hexcolor"`
+	Member         HexColor `yaml:"member"           validate:"omitempty,hexcolor"`
+	Owner          HexColor `yaml:"owner"            validate:"omitempty,hexcolor"`
+	UnknownRole    HexColor `yaml:"unknownrole"      validate:"omitempty,hexcolor"`
+}
+
 type ColorThemeText struct {
 	Primary   HexColor `yaml:"primary"   validate:"omitempty,hexcolor"`
 	Secondary HexColor `yaml:"secondary" validate:"omitempty,hexcolor"`
@@ -164,6 +173,7 @@ type ColorThemeBackground struct {
 }
 
 type ColorTheme struct {
+	Icon       ColorThemeIcon       `yaml:"icon"       validate:"required"`
 	Text       ColorThemeText       `yaml:"text"       validate:"required"`
 	Background ColorThemeBackground `yaml:"background" validate:"required"`
 	Border     ColorThemeBorder     `yaml:"border"     validate:"required"`
@@ -171,6 +181,19 @@ type ColorTheme struct {
 
 type ColorThemeConfig struct {
 	Inline ColorTheme `yaml:",inline"`
+}
+
+type IconTheme struct {
+	NewContributor string `yaml:"newcontributor,omitempty"`
+	Contributor    string `yaml:"contributor,omitempty"`
+	Collaborator   string `yaml:"collaborator,omitempty"`
+	Member         string `yaml:"member,omitempty"`
+	Owner          string `yaml:"owner,omitempty"`
+	UnknownRole    string `yaml:"unknownrole,omitempty"`
+}
+
+type IconThemeConfig struct {
+	Inline IconTheme `yaml:",inline"`
 }
 
 type TableUIThemeConfig struct {
@@ -186,18 +209,20 @@ type UIThemeConfig struct {
 type ThemeConfig struct {
 	Ui     UIThemeConfig     `yaml:"ui,omitempty"     validate:"omitempty"`
 	Colors *ColorThemeConfig `yaml:"colors,omitempty" validate:"omitempty"`
+	Icons  *IconThemeConfig  `yaml:"icons,omitempty" validate:"omitempty"`
 }
 
 type Config struct {
-	PRSections     []PrsSectionConfig    `yaml:"prSections"`
-	IssuesSections []IssuesSectionConfig `yaml:"issuesSections"`
-	Repo           RepoConfig            `yaml:"repo"`
-	Defaults       Defaults              `yaml:"defaults"`
-	Keybindings    Keybindings           `yaml:"keybindings"`
-	RepoPaths      map[string]string     `yaml:"repoPaths"`
-	Theme          *ThemeConfig          `yaml:"theme,omitempty" validate:"omitempty"`
-	Pager          Pager                 `yaml:"pager"`
-	ConfirmQuit    bool                  `yaml:"confirmQuit"`
+	PRSections      []PrsSectionConfig    `yaml:"prSections"`
+	IssuesSections  []IssuesSectionConfig `yaml:"issuesSections"`
+	Repo            RepoConfig            `yaml:"repo"`
+	Defaults        Defaults              `yaml:"defaults"`
+	Keybindings     Keybindings           `yaml:"keybindings"`
+	RepoPaths       map[string]string     `yaml:"repoPaths"`
+	Theme           *ThemeConfig          `yaml:"theme,omitempty" validate:"omitempty"`
+	Pager           Pager                 `yaml:"pager"`
+	ConfirmQuit     bool                  `yaml:"confirmQuit"`
+	ShowAuthorIcons bool                  `yaml:"showAuthorIcons"`
 }
 
 type configError struct {
@@ -313,6 +338,7 @@ func (parser ConfigParser) getDefaultConfig() Config {
 			},
 		},
 		ConfirmQuit: false,
+		ShowAuthorIcons: true,
 	}
 }
 

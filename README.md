@@ -172,6 +172,7 @@ theme: # optional, see more info below
 pager:
   diff: less # or delta for example
 confirmQuit: false # show prompt on quit or not
+showAuthorIcons: true # show author-role icons
 ```
 
 ### 🗃 Running with a different config file

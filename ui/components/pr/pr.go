@@ -195,7 +195,7 @@ func (pr *PullRequest) renderExtendedTitle(isSelected bool) string {
 		baseStyle = baseStyle.Foreground(pr.Ctx.Theme.SecondaryText).Background(pr.Ctx.Theme.SelectedBackground)
 	}
 
-	author := baseStyle.Render(fmt.Sprintf("@%s", pr.Data.Author.Login))
+	author := baseStyle.Render(fmt.Sprintf("@%s", pr.Data.GetAuthor(pr.Ctx.Theme, pr.Ctx.Config.ShowAuthorIcons)))
 	top := lipgloss.JoinHorizontal(lipgloss.Top, pr.Data.Repository.NameWithOwner, fmt.Sprintf(" #%d by %s", pr.Data.Number, author))
 	branchHidden := pr.Ctx.Config.Defaults.Layout.Prs.Base.Hidden
 	if branchHidden == nil || !*branchHidden {
@@ -217,7 +217,7 @@ func (pr *PullRequest) renderExtendedTitle(isSelected bool) string {
 }
 
 func (pr *PullRequest) renderAuthor() string {
-	return pr.getTextStyle().Render(pr.Data.Author.Login)
+	return pr.getTextStyle().Render(pr.Data.GetAuthor(pr.Ctx.Theme, pr.Ctx.Config.ShowAuthorIcons))
 }
 
 func (pr *PullRequest) renderAssignees() string {
