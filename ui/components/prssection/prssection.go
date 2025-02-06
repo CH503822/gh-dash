@@ -69,7 +69,7 @@ func (m Model) Update(msg tea.Msg) (section.Section, tea.Cmd) {
 				return &m, blinkCmd
 
 			case msg.Type == tea.KeyEnter:
-				m.SearchValue = m.SearchBar.Value()
+				m.SearchValue = m.GetFilters()
 				m.SetIsSearching(false)
 				m.ResetRows()
 				return &m, tea.Batch(m.FetchNextPageSectionRows()...)
