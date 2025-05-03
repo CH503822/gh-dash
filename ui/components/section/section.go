@@ -2,11 +2,13 @@ package section
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/cli/go-gh/v2/pkg/repository"
 
 	"github.com/dlvhdr/gh-dash/v4/config"
 	"github.com/dlvhdr/gh-dash/v4/data"
@@ -44,12 +46,30 @@ type BaseModel struct {
 type NewSectionOptions struct {
 	Id          int
 	Config      config.SectionConfig
+	Ctx         *context.ProgramContext
 	Type        string
 	Columns     []table.Column
 	Singular    string
 	Plural      string
 	LastUpdated time.Time
 	CreatedAt   time.Time
+}
+
+func (options NewSectionOptions) GetConfigFilters(ctx *context.ProgramContext) string {
+	filters := options.Config.Filters
+	if !ctx.Config.FilterByCurrentClone {
+		return filters;
+	}
+	repo, err := repository.Current()
+	if err != nil {
+		return filters
+	}
+	for _, token := range strings.Fields(filters) {
+		if strings.HasPrefix(token, "repo:") {
+			return filters
+		}
+	}
+	return fmt.Sprintf("%s repo:%s/%s", filters, repo.Owner, repo.Name)
 }
 
 func NewModel(
@@ -67,9 +87,9 @@ func NewModel(
 		PluralForm:   options.Plural,
 		SearchBar: search.NewModel(ctx, search.SearchOptions{
 			Prefix:       fmt.Sprintf("is:%s", options.Type),
-			InitialValue: options.Config.Filters,
+			InitialValue: options.GetConfigFilters(ctx),
 		}),
-		SearchValue:           options.Config.Filters,
+		SearchValue:           options.GetConfigFilters(ctx),
 		IsSearching:           false,
 		TotalCount:            0,
 		PageInfo:              nil,

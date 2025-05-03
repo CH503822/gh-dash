@@ -189,15 +189,16 @@ type ThemeConfig struct {
 }
 
 type Config struct {
-	PRSections     []PrsSectionConfig    `yaml:"prSections"`
-	IssuesSections []IssuesSectionConfig `yaml:"issuesSections"`
-	Repo           RepoConfig            `yaml:"repo"`
-	Defaults       Defaults              `yaml:"defaults"`
-	Keybindings    Keybindings           `yaml:"keybindings"`
-	RepoPaths      map[string]string     `yaml:"repoPaths"`
-	Theme          *ThemeConfig          `yaml:"theme,omitempty" validate:"omitempty"`
-	Pager          Pager                 `yaml:"pager"`
-	ConfirmQuit    bool                  `yaml:"confirmQuit"`
+	PRSections           []PrsSectionConfig    `yaml:"prSections"`
+	IssuesSections       []IssuesSectionConfig `yaml:"issuesSections"`
+	Repo                 RepoConfig            `yaml:"repo"`
+	Defaults             Defaults              `yaml:"defaults"`
+	Keybindings          Keybindings           `yaml:"keybindings"`
+	RepoPaths            map[string]string     `yaml:"repoPaths"`
+	Theme                *ThemeConfig          `yaml:"theme,omitempty" validate:"omitempty"`
+	Pager                Pager                 `yaml:"pager"`
+	ConfirmQuit          bool                  `yaml:"confirmQuit"`
+	FilterByCurrentClone bool                  `yaml:"filterByCurrentClone"`
 }
 
 type configError struct {
@@ -313,6 +314,7 @@ func (parser ConfigParser) getDefaultConfig() Config {
 			},
 		},
 		ConfirmQuit: false,
+		FilterByCurrentClone: true,
 	}
 }
 
